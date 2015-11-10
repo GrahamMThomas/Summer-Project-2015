@@ -22,6 +22,7 @@ public class ShopScreen : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
+		//If the saved data is found, deserialize it so it can be used to upgrade the players attributes.
 		{
 			if (File.Exists (Application.persistentDataPath + "/playerInfo.dat")) {
 				BinaryFormatter bf = new BinaryFormatter ();
@@ -37,28 +38,31 @@ public class ShopScreen : MonoBehaviour
 			}
 		}
 		//Upgrades
+		//Boots and jump price is the level x 50
 		BootsPrice.text = "" + data.bootsLevel * 50;
 		JumpPrice.text = "" + data.jumpLevel * 50;
 	}
-
+	//Method is applied to a button.
 	public void UpgradeBoots ()
 	{
+		//Parse the string to the price and then if you have the money, it allows you to buy it.
 		if (data.money >= int.Parse (BootsPrice.text)) {
 			data.bootsLevel++;
 			data.money -= int.Parse (BootsPrice.text);
 			BootsPrice.text = "" + (int.Parse (BootsPrice.text) + 50);
 		}
 	}
-
+	//Similar to boots
 	public void UpgradeJump ()
 	{
+		//Parse the string to the price and then if you have the money, it allows you to buy it.
 		if (data.money >= int.Parse (JumpPrice.text)) {
 			data.jumpLevel++;
 			data.money -= int.Parse(JumpPrice.text);
 			JumpPrice.text = "" + (int.Parse (JumpPrice.text) + 50);
 		}
 	}
-
+	//This was a hidden button I used for text purposes.
 	public void giveMoney()
 	{
 		data.money += 10;
@@ -76,6 +80,7 @@ public class ShopScreen : MonoBehaviour
 
 	public void LeaveShop ()
 	{
+		//If they press the leave shop button. Reserialize the data so I could be loaded.
 		if (File.Exists (Application.persistentDataPath + "/playerInfo.dat")) {
 			file = File.Open (Application.persistentDataPath + "/playerInfo.dat", FileMode.Open);
 		} else { // Using this to test the shop without having to play the game first.
