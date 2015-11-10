@@ -32,6 +32,7 @@ public class Mover : MonoBehaviour
 
 	void Start ()
 	{
+		//Initialize health speed and jump levels
 		health = maxHealth;
 		anim = gameObject.GetComponent<Animation> ();
 		bg = GameObject.Find ("Background").GetComponent<Background> ();
@@ -45,6 +46,7 @@ public class Mover : MonoBehaviour
 	{
 		if (!dead) {
 			CharacterController controller = GetComponent<CharacterController> ();
+			//If the player is on the ground allow for movement based on the arrow keys or on the wasd keys.
 			if (controller.isGrounded) {
 				moveDirection = new Vector3 (0, 0, Input.GetAxis ("Vertical"));
 				moveDirection = transform.TransformDirection (moveDirection);
@@ -52,11 +54,15 @@ public class Mover : MonoBehaviour
 				if (Input.GetKey (KeyCode.Space)) {
 					moveDirection.y = jumpSpeed;
 				}
-					
+			//Weird bug where the character was getting stuck. So if you are in the air and
+			//you press the space bar. The character will be barely moved at all but just enough to get him unstuck.
+			//Weird workaround because I couldn't get it to work any other way.
 			} else if (Input.GetKeyDown (KeyCode.Space)) {
 				transform.position = new Vector3 (transform.position.x + 0.1f, transform.position.y, transform.position.z + 0.1f);
 			}
+			//Rotate the character and the camera using the rotate speed that can be changed in the esc menu.
 			transform.Rotate (0, Input.GetAxis ("Horizontal") * rotateSpeed, 0);
+			//Have to use the legacy animations because those are the ones that game with the model that I downloaded.
 			if (Input.GetAxis ("Vertical") == 0) {
 				anim.clip = idle;
 				anim.Play ();
@@ -64,10 +70,12 @@ public class Mover : MonoBehaviour
 				anim.clip = run;
 				anim.Play ();
 			}
+			//Gravity is based on Time.
 			moveDirection.y -= gravity * Time.deltaTime;
 			controller.Move (moveDirection * Time.deltaTime);
 			//Health Bar
 			hpBar.fillAmount = (float)health / (float)maxHealth;
+			//Kinda self explanatory
 			if (health <= 0) {
 				dead = true;
 			}
@@ -78,17 +86,22 @@ public class Mover : MonoBehaviour
 
 	IEnumerator Death ()
 	{
+		//Make the player disapear and make the weapon disapear as well.
 		GameObject.Find ("dokebimusa").SetActive (false);
 		if (GameObject.Find ("Bip01")) {
 			GameObject.Find ("Bip01").SetActive(false);
 		}
+		//Enable the retry button which reloads the game.
 		retryButton.gameObject.SetActive (true);
+		//Create the really bad looking blood.
 		var blood = Instantiate (DeathBlood);
 		blood.SetParent (transform);
 		blood.transform.localPosition = new Vector3 (0, 0.7f, 0);
+		//Raise the blood so It isn't inside the floor
 		yield return new WaitForSeconds (1f);
 	}
-	
+	//This next method is something I had to google because It was really complicated.
+	//Essentially, you are creating a file which holds the Serialized data of all of the variables that you chose to save.
 	public void Save ()
 	{
 		BinaryFormatter bf = new BinaryFormatter ();
@@ -116,12 +129,14 @@ public class Mover : MonoBehaviour
 
 	public void Reset ()
 	{
+		//Delete the save data because the player died. Hardcore mode activated.
 		if (File.Exists (Application.persistentDataPath + "/playerInfo.dat")) {
 			File.Delete (Application.persistentDataPath + "/playerInfo.dat");
 		}
 		Application.LoadLevel (0);
 	}
-
+	//Basically the opposite of the save function. Deserialize the data and load the data from the file into the variables.
+	//The method is called every time you launch the game, however, unless the file exists, it will do nothing
 	public void Load ()
 	{
 		print ("Loaded: " + Application.persistentDataPath + "/playerInfo.dat");
@@ -147,6 +162,7 @@ public class Mover : MonoBehaviour
 			//End Variables
 		}
 	}
+	//You need to create a class so you can serialize it. So Any variable I needed, I first needed to put it here.
 	[Serializable]
 	public class PlayerData
 	{
