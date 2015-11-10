@@ -8,6 +8,8 @@ public class Shop : MonoBehaviour {
 	void Start () {
 		anim = GetComponent<Animator> ();
 	}
+	//If the player enters the shop range. The shopkeeper will bow and then allow you to enter
+	//	the shop by pressing the E key.
 	void OnTriggerEnter(Collider colid)
 	{
 		if (colid.gameObject.tag == "Player") {
@@ -16,13 +18,16 @@ public class Shop : MonoBehaviour {
 			waveLetters.text = "Press E to Enter Shop";
 		}
 	}
+	//If you press E while in range
 	void OnTriggerStay(Collider colid)
 	{
+		//Load the new scene which is the shop.
 		if (Input.GetKey (KeyCode.E)) {
 			GameObject.Find ("Bob").GetComponent<Mover>().Save ();
 			Application.LoadLevel(1);
 		}
 	}
+	//If the player leaves the range, display no message so they player doesn't try to enter the shop.
 	void OnTriggerExit(Collider colid)
 	{
 		if (colid.gameObject.tag == "Player") {
@@ -30,6 +35,7 @@ public class Shop : MonoBehaviour {
 			waveLetters.text = "";
 		}
 	}
+	//Make the shop keeper bow.
 	IEnumerator Bow()
 	{
 		anim.SetBool ("Bow", true);
