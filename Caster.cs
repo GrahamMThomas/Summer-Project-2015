@@ -2,7 +2,8 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
-
+//PURPOSE: This class uses mainly the UI to allow the player
+//	to cast the spawnns.
 [RequireComponent(typeof(CharacterController))]
 public class Caster : MonoBehaviour
 {
@@ -29,6 +30,7 @@ public class Caster : MonoBehaviour
 		//Initializing spells attributes
 		spName = GameObject.Find ("SpellName").GetComponent<Text> ();
 		//This is initializing the images list
+		//Find all the images that correspond to the correct numpad direction
 		for (int i = 0; i < 18; i++) {
 			GameObject currentImage = GameObject.Find ("Image (" + i + ")");
 			images.Add (currentImage);
@@ -45,7 +47,9 @@ public class Caster : MonoBehaviour
 	void Update ()
 	{		
 		//List the Spells unlocked here
+		//As long as bob is still alive, let him cast spells
 		if (!GameObject.Find ("Bob").GetComponent<Mover> ().dead) {
+			//FIREBALL
 			if ((Input.GetKey (KeyCode.Alpha1) || Input.GetKey (KeyCode.Keypad1)) && Casting == false) {
 				//Set up the spell name and difficulty and Color here. Attributes are all the top. Damage in the spell script
 				CastSetup ("FireBall", 3, Color.Lerp (Color.red, Color.yellow, 0.5f));
@@ -53,6 +57,7 @@ public class Caster : MonoBehaviour
 			}
 			//Checking to see if you pressed a button to cast a spell
 			if (Casting == true && currSpellnums.Count >= 0) {
+				//This is checking your input and making waiting for you to press the right button
 				if (currSpellnums.Count >= 1) {
 					if (currSpellnums [0] == 9 && Input.GetKeyDown (KeyCode.Keypad9)) {
 						currSpellIcon [0].GetComponent<Image> ().color = Color.grey;
@@ -162,6 +167,7 @@ public class Caster : MonoBehaviour
 	//Creates images and casting combo for the spell
 	void CastSetup (string name, int castNum, Color spColor)
 	{
+		//This is a UI manipulation to start a spell cast
 		spName.text = name;
 		spName.color = spColor;
 		Casting = true;
@@ -171,6 +177,7 @@ public class Caster : MonoBehaviour
 				i = (i * 3);
 			}
 			
+			//These next lines are choosing the random directions for the spells
 			int keyNum = Random.Range (1, 10);
 			if (keyNum != 5 && i / 3 != castNum) {
 				images [i].SetActive (true);
@@ -192,8 +199,10 @@ public class Caster : MonoBehaviour
 				} else if (keyNum == 9) {
 					images [i].transform.rotation = Quaternion.Euler (0, 0, 45);
 				}
+				//Add the keynum to the spell num
 				currSpellnums.Add (keyNum);
 			} else if (keyNum == 5 && i / 3 != castNum) {
+				//After setting all of the images, Enable them.
 				images [i + 1].SetActive (true);
 				currSpellIcon.Add (images [i + 1]);
 				currSpellnums.Add (keyNum);
