@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+/*
+PURPOSE: Simple script to make the zombies health bars
+	always facing the main characters camera.
+*/
 public class CameraFacingBillBoard : MonoBehaviour
 {
 	public Camera m_Camera;
