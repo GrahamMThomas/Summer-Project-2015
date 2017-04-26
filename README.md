@@ -45,3 +45,7 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
+
+## Download
+
+[Game Download](http://www.mediafire.com/file/doko20dy9wy4oty/Magik_Survival_Beta_V.2.zip).
